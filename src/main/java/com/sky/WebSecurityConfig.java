@@ -32,7 +32,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 	
 	
 	/**
-	 * 用户信息,先将用户保存在内存中,后续改为查询数据库
+	 * 配置一个内存中的用户认证器,后续改为查询数据库
 	 */
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
