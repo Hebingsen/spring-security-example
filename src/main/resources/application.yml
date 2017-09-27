@@ -1,0 +1,34 @@
+#此配置文件用于配置一些公用的配置,例如数据库连接配置
+#关于mybatis自定义Mapper的配置,需要在启动类添加@MapperScan(basePackages = "com.sky.*.mapper")或在对应的接口使用@Mapper注解
+
+#数据源配置 
+spring:
+  datasource:
+    url: jdbc:mysql://127.0.0.1:3306/sky?useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull&allowMultiQueries=true&autoReconnect=true
+    username: root
+    password: root
+    driver-class-name: com.mysql.jdbc.Driver 
+    hikari:
+      max-lifetime: 1765000 #一个连接的生命时长（毫秒)
+      maximumPoolSize: 15 #连接池中允许的最大连接数。缺省值：10
+
+#开源通用mapper
+mapper:
+  mappers:
+  - com.sky.base.BaseMapper
+  not-empty: false
+  identity: MYSQL
+  style: normal #数据库字段与实体类属性映射方式,详情见tk.mybatis.mapper.code.Style 
+
+#mybatis配置
+mybatis:
+  type-aliases-package: com.sky.*.pojo
+  mapper-locations:
+  - classpath*:com/sky/**/mapping/*Mapper.xml
+
+#分页助手
+pagehelper:
+  helper-dialect : mysql
+  support-methods-arguments: true
+  params: countSql 
+  reasonable : false
