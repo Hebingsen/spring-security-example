@@ -16,6 +16,12 @@ public class MyUserDetailsService implements UserDetailsService{
 	@Autowired
 	private UserMapper userMapper;
 	
+	@Autowired
+	private BCryptPasswordEncoder bCryptPasswordEncoder;
+	
+	@Autowired
+	private Md5PasswordEncoder md5PasswordEncoder;
+	
 	/**
 	 * 获取用户详情信息
 	 */
@@ -33,12 +39,19 @@ public class MyUserDetailsService implements UserDetailsService{
 		
 		System.err.println(String.format("将由数据库查询出来的用户信息转化为securityUser = %s", securityUser.toString()));
 		
-		//加密密码
-		BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder(16); 
-		String encodePassword = bCryptPasswordEncoder.encode(securityUser.getPassword());
+		//使用bCrypt加密密码
+		//String encodePassword = bCryptPasswordEncoder.encode(securityUser.getPassword());
+		
+		//使用md5加密密码
+		String encodePassword = md5PasswordEncoder.encode(securityUser.getPassword());
+		
 		System.err.println(String.format("用户加密前的密码 : %s ,加密后的密码 : %s ", user.getPassword(),encodePassword));
-		//securityUser.setPassword(encodePassword);
+		securityUser.setPassword(encodePassword);
 		return securityUser;
 	}
+	
+	
+	
+	
 
 }
