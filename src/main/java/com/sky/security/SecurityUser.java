@@ -39,21 +39,25 @@ public class SecurityUser extends User implements UserDetails{
 		return super.getUserName();
 	}
 
+	// 账户是否未过期
 	@Override
 	public boolean isAccountNonExpired() {
 		return true;
 	}
 
+	// 账户是否未锁定
 	@Override
 	public boolean isAccountNonLocked() {
 		return true;
 	}
 
+	// 密码是否未过期
 	@Override
 	public boolean isCredentialsNonExpired() {
 		return true;
 	}
 
+	// 账户是否激活
 	@Override
 	public boolean isEnabled() {
 		return true;
