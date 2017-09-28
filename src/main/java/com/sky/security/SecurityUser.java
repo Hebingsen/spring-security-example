@@ -7,12 +7,15 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sky.user.pojo.User;
 
 
 public class SecurityUser extends User implements UserDetails{
 
 	private static final long serialVersionUID = 1L;
+	
+	private Collection<? extends GrantedAuthority> authorities;
 
 	/**
 	 * 查询并返回权限信息
@@ -29,6 +32,7 @@ public class SecurityUser extends User implements UserDetails{
 	}
 
 	@Override
+	@JsonIgnore
 	public String getPassword() {
 		
 		return super.getPassword();
@@ -41,24 +45,28 @@ public class SecurityUser extends User implements UserDetails{
 
 	// 账户是否未过期
 	@Override
+	@JsonIgnore
 	public boolean isAccountNonExpired() {
 		return true;
 	}
 
 	// 账户是否未锁定
 	@Override
+	@JsonIgnore
 	public boolean isAccountNonLocked() {
 		return true;
 	}
 
 	// 密码是否未过期
 	@Override
+	@JsonIgnore
 	public boolean isCredentialsNonExpired() {
 		return true;
 	}
 
 	// 账户是否激活
 	@Override
+	@JsonIgnore
 	public boolean isEnabled() {
 		return true;
 	}
