@@ -30,7 +30,6 @@ public class UserAuthenticationException extends RuntimeException {
 	}
 
 	public UserAuthenticationException(int code, String msg) {
-		super();
 		this.code = code;
 		this.msg = msg;
 	}

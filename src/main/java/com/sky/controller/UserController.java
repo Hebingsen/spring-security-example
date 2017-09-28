@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.sky.exception.UserAuthenticationException;
 import com.sky.user.mapper.UserMapper;
 import com.sky.user.pojo.User;
 
@@ -34,10 +36,24 @@ public class UserController {
 	}
 	
 	
+	/**
+	 * 测试mybatis查询
+	 * @param id
+	 * @return
+	 */
 	@GetMapping("/test/{id}")
 	public Object userTest(@PathVariable String id) {
 		User user = userMapper.selectOne(new User().setId(Integer.parseInt(id)));
 		return user;
+	}
+	
+	/**
+	 * 测试全局异常处理
+	 * @return
+	 */
+	@GetMapping("/exception")
+	public Object testException() {
+		throw new UserAuthenticationException(500, "测试全局异常是否有作用");
 	}
 	
 	

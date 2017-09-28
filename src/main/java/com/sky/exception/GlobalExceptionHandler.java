@@ -7,7 +7,10 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import lombok.extern.slf4j.Slf4j;
+
 @RestControllerAdvice
+@Slf4j
 public class GlobalExceptionHandler {
 
 	/**
@@ -20,7 +23,9 @@ public class GlobalExceptionHandler {
 	 */
 	@ExceptionHandler(value = Exception.class)
 	public Object defaultErrorHandler(HttpServletRequest request, Exception e) throws Exception {
-		e.printStackTrace();
+		
+		log.info("异常信息:{}",e.getMessage());
+
 		Map<String,Object> result = new HashMap<String,Object>();
 		result.put("code", 500);
 		result.put("msg", "发生异常 : " + e.getMessage());
@@ -38,11 +43,13 @@ public class GlobalExceptionHandler {
 	 * @throws Exception
 	 */
 	@ExceptionHandler(value = UserAuthenticationException.class)
-	public Object serviceExceptionHandler(HttpServletRequest request, UserAuthenticationException e) throws Exception {
-		e.printStackTrace();
+	public Object userAuthenticationExceptionHandler(HttpServletRequest request, UserAuthenticationException e) throws Exception {
+		
+		log.info("异常信息:{},异常状态码:{}",e.getMsg(),e.getCode());
+		
 		Map<String,Object> result = new HashMap<String,Object>();
 		result.put("code", e.getCode());
-		result.put("msg", "发生异常 : " + e.getMessage());
+		result.put("msg", "发生异常 : " + e.getMsg());
 		return result;
 	}
 }

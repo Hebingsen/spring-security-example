@@ -21,6 +21,9 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 import com.sky.exception.UserAuthenticationException;
 import com.sky.security.Md5PasswordEncoder;
 import com.sky.security.MyUserDetailsService;
+import com.sky.security.handler.LoginFailureHandler;
+import com.sky.security.handler.LoginSuccessHandler;
+
 import lombok.extern.slf4j.Slf4j;
 
 @Configuration
@@ -82,45 +85,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	public Md5PasswordEncoder md5PasswordEncode() {
 		Md5PasswordEncoder md5PasswordEncoder = new Md5PasswordEncoder();
 		return md5PasswordEncoder;
-	}
-	
-
-	/**
-	 * 登录成功处理,可在此返回json格式
-	 * 
-	 * @作者 乐此不彼
-	 * @时间 2017年9月27日
-	 * @公司 sky工作室
-	 */
-	static class LoginSuccessHandler implements AuthenticationSuccessHandler {
-
-		@Override
-		public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
-				Authentication authentication) throws IOException, ServletException {
-			log.info("登录成功");
-			PrintWriter writer = response.getWriter();
-			writer.println("恭喜你登录成功,用户信息:"+SecurityContextHolder.getContext().getAuthentication().getName());
-			writer.flush();
-			writer.close();
-		}
-
-	}
-
-	/**
-	 * 登录失败处理,可在此返回json格式
-	 * 
-	 * @作者 乐此不彼
-	 * @时间 2017年9月27日
-	 * @公司 sky工作室
-	 */
-	static class LoginFailureHandler implements AuthenticationFailureHandler {
-
-		@Override
-		public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
-				AuthenticationException exception) throws IOException, ServletException {
-			throw new UserAuthenticationException(1001,"用户登录失败");
-		}
-
 	}
 
 }
