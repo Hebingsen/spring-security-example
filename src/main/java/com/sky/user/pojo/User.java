@@ -24,9 +24,5 @@ public class User implements Serializable{
 	private String phone;
 	
 	private Date createTime;
-	
-	//用户token
-	@Transient
-	private String access_token;
 
 }
