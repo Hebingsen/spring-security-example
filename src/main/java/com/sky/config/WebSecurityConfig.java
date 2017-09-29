@@ -9,10 +9,12 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.annotation.web.configurers.ExceptionHandlingConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import com.sky.exception.handler.HandlerAccessDeniedException;
 import com.sky.security.Md5PasswordEncoder;
 import com.sky.security.MyUserDetailsService;
 import com.sky.security.filter.JwtAuthenticationFilter;
@@ -30,6 +32,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Autowired
 	private MyUserDetailsService myUserDetailsService;
+	
+	@Autowired
+	private HandlerAccessDeniedException handlerAccessDeniedException;
 
 	/**
 	 * 鉴权规则
@@ -45,7 +50,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		
 		// 添加JwtFilter
 		http.addFilterBefore(jwtAuthenticationFilter(),UsernamePasswordAuthenticationFilter.class);
-
+		
+		//配置拒绝访问异常(AccessDeniedException)的处理
+		ExceptionHandlingConfigurer<HttpSecurity> exceptionHandlingConfigurer = http.exceptionHandling().accessDeniedHandler(handlerAccessDeniedException);
+		
+		http.apply(exceptionHandlingConfigurer);
 		// 基于token，所以不需要session
 		// SessionCreationPolicy:表示会话创建政策,STATELESS:表示无状态
 		http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)

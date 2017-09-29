@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.sky.base.ResponseEntity;
+import com.sky.exception.AuthException;
 
 /**
  * 只有用户角色为admin时才可以进行访问
@@ -25,7 +26,12 @@ public class AdminController {
 	
 	@GetMapping("/")
 	public Object get() {
-		return ResponseEntity.success("正在访问AdminController");
+		try {
+			return ResponseEntity.success("正在访问AdminController");
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new AuthException(0, "111111111111");
+		}
 	}
 	
 }

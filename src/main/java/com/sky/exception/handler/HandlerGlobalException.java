@@ -1,5 +1,7 @@
 package com.sky.exception.handler;
 
+import java.nio.file.AccessDeniedException;
+
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -11,13 +13,26 @@ import lombok.extern.slf4j.Slf4j;
 
 @RestControllerAdvice
 @Slf4j
-public class GlobalExceptionHandler {
+public class HandlerGlobalException {
 
 	/**
 	 * 处理默认异常信息
 	 */
 	@ExceptionHandler(value = Exception.class)
 	public Object handlerDefaultException(HttpServletRequest request, Exception e) throws Exception {
+		log.info("异常信息:{}",e.getMessage());
+		return ResponseEntity.fail(500, e.getMessage());
+	}
+	
+	/**
+	 * 处理security异常
+	 * @param request
+	 * @param e
+	 * @return
+	 * @throws Exception
+	 */
+	@ExceptionHandler(value = RuntimeException.class)
+	public Object handlerRuntimeException(HttpServletRequest request, RuntimeException e) throws Exception {
 		log.info("异常信息:{}",e.getMessage());
 		return ResponseEntity.fail(500, e.getMessage());
 	}
