@@ -10,27 +10,27 @@ import lombok.Data;
  * @公司 sky工作室
  */
 @Data
-public class UserAuthenticationException extends RuntimeException {
+public class AuthException extends RuntimeException {
 
 	private static final long serialVersionUID = 17174741487766414L;
 
 	private int code;
-	private String msg;
+	private String message;
 
-	public UserAuthenticationException(String message) {
+	public AuthException(String message) {
 		super(message);
 	}
 
-	public UserAuthenticationException(Throwable cause) {
+	public AuthException(Throwable cause) {
 		super(cause);
 	}
 
-	public UserAuthenticationException(String message, Throwable cause) {
+	public AuthException(String message, Throwable cause) {
 		super(message, cause);
 	}
 
-	public UserAuthenticationException(int code, String msg) {
+	public AuthException(int code, String message) {
 		this.code = code;
-		this.msg = msg;
+		this.message = message;
 	}
 }

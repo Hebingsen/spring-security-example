@@ -32,3 +32,22 @@ pagehelper:
   support-methods-arguments: true
   params: countSql 
   reasonable : false
+
+logging:
+  level:
+    org.springframework:
+      security: DEBUG
+      
+jwt:
+  #jwt请求头
+  header : token
+  #jwt token 前缀:持票人,可以自定义
+  token-head : Bearer
+  #秘钥bingsen.he的base64编码
+  secret : YmluZ3Nlbi5oZQ==
+  #有效期(单位:秒) 30*60=1800
+  expiration : 1800
+  
+  
+  
+  

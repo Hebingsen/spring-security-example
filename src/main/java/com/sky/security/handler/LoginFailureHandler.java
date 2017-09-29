@@ -13,7 +13,7 @@ import org.springframework.security.web.authentication.AuthenticationFailureHand
 
 import com.google.gson.Gson;
 import com.sky.base.ResponseEntity;
-import com.sky.exception.UserAuthenticationException;
+import com.sky.exception.AuthException;
 import com.sky.security.SecurityUser;
 
 import lombok.extern.slf4j.Slf4j;

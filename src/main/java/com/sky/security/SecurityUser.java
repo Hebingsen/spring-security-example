@@ -10,6 +10,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sky.user.pojo.User;
 
+import lombok.Data;
 
 public class SecurityUser extends User implements UserDetails{
 

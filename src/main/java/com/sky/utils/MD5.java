@@ -2,6 +2,9 @@ package com.sky.utils;
 
 import java.security.MessageDigest;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
+
 /**
  * md5加密工具类
  * 

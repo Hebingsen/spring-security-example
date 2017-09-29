@@ -1,38 +1,27 @@
-package com.sky.controller;
+package com.sky.user.controller;
 
-import java.util.Date;
-import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.sky.exception.UserAuthenticationException;
+import com.sky.base.ResponseEntity;
+import com.sky.exception.AuthException;
 import com.sky.user.mapper.UserMapper;
 import com.sky.user.pojo.User;
 
 @RestController
 @RequestMapping("/api/user")
+//@PostAuthorize("hasRole('USER')")
 public class UserController {
 	
 	@Autowired
 	private UserMapper userMapper;
 	
 	@GetMapping("/")
-	public Object getUserInfo() {
-		
-		for (int i = 1; i < 100; i++) {
-			User user = new User();
-			user.setUserName("user-"+i);
-			user.setPassword("123456");
-			user.setPhone("1812274375"+i);
-			user.setCreateTime(new Date());
-			userMapper.insertSelective(user);
-		}
-		
-		List<User> users = userMapper.findAll();
-		return users;
+	public Object get() {
+		return ResponseEntity.success("正在访问UserController");
 	}
 	
 	
@@ -53,7 +42,7 @@ public class UserController {
 	 */
 	@GetMapping("/exception")
 	public Object testException() {
-		throw new UserAuthenticationException(500, "测试全局异常是否有作用");
+		throw new AuthException(500, "测试全局异常是否有作用");
 	}
 	
 	
