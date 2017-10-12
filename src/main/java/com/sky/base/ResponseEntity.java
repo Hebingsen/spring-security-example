@@ -1,5 +1,8 @@
 package com.sky.base;
 
+import com.google.gson.Gson;
+import com.sky.exception.ServiceException;
+
 import lombok.Data;
 import lombok.ToString;
 import lombok.experimental.Accessors;
@@ -56,6 +59,18 @@ public class ResponseEntity {
 	 */
 	public static ResponseEntity fail(int code, String msg) {
 		return new ResponseEntity(code, msg, null);
+	}
+	
+	/**
+	 * 转化为json字符串格式
+	 * @return
+	 */
+	public String toJson(){
+		try {
+			return new Gson().toJson(this);
+		} catch (Exception e) {
+			throw new ServiceException("json格式转换失败");
+		}
 	}
 
 }

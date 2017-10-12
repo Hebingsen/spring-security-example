@@ -18,39 +18,25 @@ public class HandlerGlobalException {
 	 */
 	@ExceptionHandler(value = Exception.class)
 	public Object handlerDefaultException(HttpServletRequest request, Exception e) throws Exception {
-		log.info("异常信息:{}",e.getMessage());
-		return ResponseEntity.fail(500, e.getMessage());
-	}
-	
-	/**
-	 * 处理security异常
-	 * @param request
-	 * @param e
-	 * @return
-	 * @throws Exception
-	 */
-	@ExceptionHandler(value = RuntimeException.class)
-	public Object handlerRuntimeException(HttpServletRequest request, RuntimeException e) throws Exception {
-		log.info("异常信息:{}",e.getMessage());
+		log.info("异常信息:{}", e.getMessage());
 		return ResponseEntity.fail(500, e.getMessage());
 	}
 
-	
 	/**
 	 * 处理认证相关异常
 	 */
 	@ExceptionHandler(value = AuthException.class)
 	public Object handlerUserAuthException(HttpServletRequest request, AuthException e) throws Exception {
-		log.info("异常信息:{},异常状态码:{}",e.getMessage(),e.getCode());
+		log.info("异常信息:{},异常状态码:{}", e.getMessage(), e.getCode());
 		return ResponseEntity.fail(e.getCode(), e.getMessage());
 	}
-	
+
 	/**
 	 * 处理业务异常
 	 */
 	@ExceptionHandler(value = ServiceException.class)
 	public Object handlerServiceException(HttpServletRequest request, ServiceException e) throws Exception {
-		log.info("异常信息:{},异常状态码:{}",e.getMessage(),e.getCode());
-		return ResponseEntity.fail(e.getCode(),e.getMessage());
+		log.info("异常信息:{},异常状态码:{}", e.getMessage(), e.getCode());
+		return ResponseEntity.fail(e.getCode(), e.getMessage());
 	}
 }

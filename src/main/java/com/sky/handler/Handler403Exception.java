@@ -23,13 +23,14 @@ import com.sky.base.ResponseEntity;
 @Component
 public class Handler403Exception implements AccessDeniedHandler {
 
+	/**
+	 * 无权限触发的操作
+	 */
 	@Override
 	public void handle(HttpServletRequest request, HttpServletResponse response,
 			AccessDeniedException accessDeniedException) throws IOException, ServletException {
 		// 返回json形式的错误信息
-		ResponseEntity responseEntity = ResponseEntity.fail(401, "无权限访问");
-		String result = new Gson().toJson(responseEntity);
-
+		String result = ResponseEntity.fail(401, "权限不足").toJson();
 		response.setCharacterEncoding("UTF-8");
 		response.setContentType("application/json");
 		response.getWriter().println(result);

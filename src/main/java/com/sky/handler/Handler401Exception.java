@@ -24,15 +24,13 @@ import com.sky.base.ResponseEntity;
 public class Handler401Exception implements AuthenticationEntryPoint {
 
 	/**
-	 * 未登录或无权限时触发的操作
+	 * 未登录时触发的操作
 	 */
 	@Override
 	public void commence(HttpServletRequest request, HttpServletResponse response,
 			AuthenticationException authException) throws IOException, ServletException {
 		// 返回json形式的错误信息
-		ResponseEntity responseEntity = ResponseEntity.fail(401, "请先登录");
-		String result = new Gson().toJson(responseEntity);
-
+		String result = ResponseEntity.fail(401, "请先登录").toJson();
 		response.setCharacterEncoding("UTF-8");
 		response.setContentType("application/json");
 		response.getWriter().println(result);
