@@ -7,14 +7,13 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
-
 import com.sky.auth.service.AuthService;
 import com.sky.security.Md5PasswordEncoder;
 import com.sky.security.MyUserDetailsService;
-import com.sky.user.mapper.UserMapper;
-import com.sky.user.pojo.User;
 import com.sky.utils.JwtTokenUtil;
 import com.sky.utils.MD5;
+import com.sky.web.user.mapper.UserMapper;
+import com.sky.web.user.pojo.User;
 
 import lombok.extern.slf4j.Slf4j;
 

@@ -1,10 +1,9 @@
-package com.sky.user.mapper;
+package com.sky.web.user.mapper;
 
 import java.util.List;
-
 import org.apache.ibatis.annotations.Mapper;
 
-import com.sky.user.pojo.User;
+import com.sky.web.user.pojo.User;
 
 import tk.mybatis.mapper.common.BaseMapper;
 

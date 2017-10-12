@@ -1,4 +1,4 @@
-package com.sky.user.pojo;
+package com.sky.web.user.pojo;
 import java.io.Serializable;
 import java.util.Date;
 

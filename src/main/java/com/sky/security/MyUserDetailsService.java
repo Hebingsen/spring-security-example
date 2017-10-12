@@ -6,8 +6,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import com.sky.user.mapper.UserMapper;
-import com.sky.user.pojo.User;
+
+import com.sky.web.user.mapper.UserMapper;
+import com.sky.web.user.pojo.User;
 
 import lombok.extern.slf4j.Slf4j;
 

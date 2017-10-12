@@ -1,4 +1,4 @@
-package com.sky.user.controller;
+package com.sky.web.admin;
 
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;

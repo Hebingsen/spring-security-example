@@ -1,6 +1,6 @@
 package com.sky.auth.service;
 
-import com.sky.user.pojo.User;
+import com.sky.web.user.pojo.User;
 
 public interface AuthService {
 	

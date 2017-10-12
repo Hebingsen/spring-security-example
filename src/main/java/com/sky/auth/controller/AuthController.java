@@ -7,8 +7,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.sky.auth.service.AuthService;
 import com.sky.base.ResponseEntity;
 import com.sky.redis.RedisUtil;
-import com.sky.user.pojo.User;
 import com.sky.utils.MD5;
+import com.sky.web.user.pojo.User;
+
 import lombok.extern.slf4j.Slf4j;
 
 @RestController

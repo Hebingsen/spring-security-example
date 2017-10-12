@@ -54,7 +54,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 		
 		System.err.println(String.format("当前访问的url = %s", url));
 		
-		
 		/**
 		 * 根据URL拦截
 		 */

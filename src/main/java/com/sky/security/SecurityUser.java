@@ -2,12 +2,11 @@ package com.sky.security;
 
 import java.util.ArrayList;
 import java.util.Collection;
-
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.sky.user.pojo.User;
+import com.sky.web.user.pojo.User;
 
 public class SecurityUser extends User implements UserDetails{
 

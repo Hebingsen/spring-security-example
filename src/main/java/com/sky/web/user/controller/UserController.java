@@ -1,4 +1,4 @@
-package com.sky.user.controller;
+package com.sky.web.user.controller;
 
 import java.util.Collection;
 
@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.sky.base.ResponseEntity;
 import com.sky.exception.AuthException;
-import com.sky.user.mapper.UserMapper;
-import com.sky.user.pojo.User;
+import com.sky.web.user.mapper.UserMapper;
+import com.sky.web.user.pojo.User;
 
 @RestController
 @RequestMapping("/api/user")

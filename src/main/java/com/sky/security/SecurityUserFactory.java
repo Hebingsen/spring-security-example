@@ -2,8 +2,7 @@ package com.sky.security;
 
 import org.springframework.beans.BeanUtils;
 
-import com.sky.user.pojo.User;
-
+import com.sky.web.user.pojo.User;
 /**
  * security用户信息的工厂类,目的是创建securityUser对象
  * @作者 乐此不彼
