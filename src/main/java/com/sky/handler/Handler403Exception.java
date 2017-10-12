@@ -1,7 +1,6 @@
-package com.sky.exception.handler;
+package com.sky.handler;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -14,19 +13,27 @@ import org.springframework.stereotype.Component;
 import com.google.gson.Gson;
 import com.sky.base.ResponseEntity;
 
+/**
+ * 定义 403 处理器，实现 AccessDeniedHandler 接口
+ * 
+ * @作者 乐此不彼
+ * @时间 2017年10月12日
+ * @公司 sky工作室
+ */
 @Component
-public class HandlerAccessDeniedException implements AccessDeniedHandler{
+public class Handler403Exception implements AccessDeniedHandler {
 
 	@Override
 	public void handle(HttpServletRequest request, HttpServletResponse response,
 			AccessDeniedException accessDeniedException) throws IOException, ServletException {
-		response.setContentType("text/html;charset=UTF-8");
-		System.err.println("-----------------------------------------------------------------");
-		String json = new Gson().toJson(ResponseEntity.fail(403, "拒绝访问,请先登录"));
-		PrintWriter writer = response.getWriter();
-		writer.write(json);
-		writer.flush();
-		writer.close();
+		// 返回json形式的错误信息
+		ResponseEntity responseEntity = ResponseEntity.fail(401, "无权限访问");
+		String result = new Gson().toJson(responseEntity);
+
+		response.setCharacterEncoding("UTF-8");
+		response.setContentType("application/json");
+		response.getWriter().println(result);
+		response.getWriter().flush();
 	}
 
 }

@@ -1,4 +1,4 @@
-package com.sky.security.handler;
+package com.sky.handler;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -6,16 +6,10 @@ import java.io.PrintWriter;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
-
 import com.google.gson.Gson;
 import com.sky.base.ResponseEntity;
-import com.sky.exception.AuthException;
-import com.sky.security.SecurityUser;
-
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -26,7 +20,7 @@ import lombok.extern.slf4j.Slf4j;
  * @公司 sky工作室
  */
 @Slf4j
-public class LoginFailureHandler implements AuthenticationFailureHandler {
+public class HandlerLoginFailure implements AuthenticationFailureHandler {
 
 	@Override
 	public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,

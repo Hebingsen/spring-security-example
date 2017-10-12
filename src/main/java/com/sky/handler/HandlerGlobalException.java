@@ -1,6 +1,4 @@
-package com.sky.exception.handler;
-
-import java.nio.file.AccessDeniedException;
+package com.sky.handler;
 
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.web.bind.annotation.ExceptionHandler;

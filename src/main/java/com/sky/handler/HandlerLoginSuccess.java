@@ -1,4 +1,4 @@
-package com.sky.security.handler;
+package com.sky.handler;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -26,7 +26,7 @@ import lombok.extern.slf4j.Slf4j;
  * @公司 sky工作室
  */
 @Slf4j
-public class LoginSuccessHandler implements AuthenticationSuccessHandler {
+public class HandlerLoginSuccess implements AuthenticationSuccessHandler {
 	
 	@Override
 	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,

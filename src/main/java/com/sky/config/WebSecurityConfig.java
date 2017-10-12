@@ -9,15 +9,15 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.config.annotation.web.configurers.ExceptionHandlingConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import com.sky.exception.handler.HandlerAccessDeniedException;
+import com.sky.filter.JwtAuthenticationFilter;
+import com.sky.handler.Handler401Exception;
+import com.sky.handler.Handler403Exception;
 import com.sky.security.Md5PasswordEncoder;
 import com.sky.security.MyUserDetailsService;
-import com.sky.security.filter.JwtAuthenticationFilter;
 
 /**
  * 
@@ -32,10 +32,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Autowired
 	private MyUserDetailsService myUserDetailsService;
+
+	@Autowired
+	private Handler403Exception accessDeniedHandler;
 	
 	@Autowired
-	private HandlerAccessDeniedException handlerAccessDeniedException;
-
+	private Handler401Exception entryPointUnauthorizedHandler;
+	
 	/**
 	 * 鉴权规则
 	 */
@@ -47,14 +50,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 		// 禁用缓存
 		http.headers().cacheControl();
-		
+
 		// 添加JwtFilter
-		http.addFilterBefore(jwtAuthenticationFilter(),UsernamePasswordAuthenticationFilter.class);
-		
-		//配置拒绝访问异常(AccessDeniedException)的处理
-		ExceptionHandlingConfigurer<HttpSecurity> exceptionHandlingConfigurer = http.exceptionHandling().accessDeniedHandler(handlerAccessDeniedException);
-		
-		http.apply(exceptionHandlingConfigurer);
+		http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+
 		// 基于token，所以不需要session
 		// SessionCreationPolicy:表示会话创建政策,STATELESS:表示无状态
 		http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
@@ -71,7 +70,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 				// 除上面外的所有请求全部需要鉴权认证
 				.anyRequest().authenticated();
-
+		
+		//配置401与403错误处理器
+		http.exceptionHandling().authenticationEntryPoint(entryPointUnauthorizedHandler).accessDeniedHandler(accessDeniedHandler);
 	}
 
 	/**
@@ -86,9 +87,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		// 创建自己自定义的用户认证器
 		auth.userDetailsService(myUserDetailsService).passwordEncoder(md5PasswordEncode());
 	}
-	
+
 	/**
 	 * json web token 鉴权过滤器
+	 * 
 	 * @return
 	 */
 	@Bean

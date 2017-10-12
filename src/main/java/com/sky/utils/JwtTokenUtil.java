@@ -33,6 +33,10 @@ public class JwtTokenUtil {
 	@Autowired
 	private Environment env;
 	
+	//@Autowired
+	//private 
+	
+	
 	/**
 	 * 根据token获取用户名
 	 * @param token
@@ -62,8 +66,9 @@ public class JwtTokenUtil {
 	 */
 	public String generateToken(UserDetails userDetails) {
 		Map<String,Object> claims = new HashMap<String,Object>();
-		claims.put("username", userDetails.getUsername());
-		claims.put("authorities", userDetails.getAuthorities());
+		claims.put("username", userDetails.getUsername());//用户名
+		claims.put("authorities", userDetails.getAuthorities());//角色权限信息
+		//claims.put("redis-key", "redis:key:"+);//存储于redis中的key(目前随机生成)
 		String compact = Jwts.builder().signWith(SignatureAlgorithm.HS512, env.getProperty("jwt.secret"))
 				.setClaims(claims)
 				.compact();
