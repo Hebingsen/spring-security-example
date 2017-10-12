@@ -7,6 +7,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.sky.utils.U;
 import com.sky.web.user.mapper.UserMapper;
 import com.sky.web.user.pojo.User;
 
@@ -33,7 +34,7 @@ public class MyUserDetailsService implements UserDetailsService{
 		
 		
 		//1.根据username查询数据库中的用户信息
-		User user = userMapper.selectOne(new User().setUserName(username));
+		User user = userMapper.selectOne(new User().setPhone(username));
 		if(user == null)
 			throw new UsernameNotFoundException(String.format("根据用户名 %s 找不到对应的用户信息", username));
 		
@@ -44,10 +45,10 @@ public class MyUserDetailsService implements UserDetailsService{
 		//String encodePassword = bCryptPasswordEncoder.encode(securityUser.getPassword());
 		
 		//使用md5加密密码
-		String encodePassword = md5PasswordEncoder.encode(securityUser.getPassword());
+		//String encodePassword = md5PasswordEncoder.encode(securityUser.getPassword());
+		//log.info(String.format("用户加密前的密码 : %s ,加密后的密码 : %s ", user.getPassword(),encodePassword));
+		//securityUser.setPassword(encodePassword);
 		
-		log.info(String.format("用户加密前的密码 : %s ,加密后的密码 : %s ", user.getPassword(),encodePassword));
-		securityUser.setPassword(encodePassword);
 		return securityUser;
 	}
 	

@@ -1,83 +1,56 @@
 package com.sky.web.user.controller;
 
 import java.util.Collection;
-
 import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.sky.base.ResponseEntity;
-import com.sky.exception.AuthException;
-import com.sky.web.user.mapper.UserMapper;
-import com.sky.web.user.pojo.User;
 
+/**
+ * 用户API接口,需要有ROLE_USER权限才可以进行访问@PreAuthorize("hasRole('USER')")
+ * @作者 乐此不彼
+ * @时间 2017年10月12日
+ * @公司 sky工作室
+ */
 @RestController
 @RequestMapping("/api/user")
 @PreAuthorize("hasRole('USER')")
 public class UserController {
-	
-	@Autowired
-	private UserMapper userMapper;
-	
+
 	@Autowired
 	private HttpServletRequest request;
-	
-	@GetMapping("/")
-	public Object get() {
-		return ResponseEntity.success("正在访问UserController");
-	}
-	
+
 	/**
-	 * 当前用户登录信息
+	 * 获取当前登录用户信息
 	 */
 	@GetMapping("/login-info")
 	public Object loginInfo() {
+		
 		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		System.err.println("principal="+principal);
+		System.err.println("principal=" + principal);
+		
 		Object credentials = SecurityContextHolder.getContext().getAuthentication().getCredentials();
-		System.err.println("credentials="+credentials);
+		System.err.println("credentials=" + credentials);
+		
 		Object details = SecurityContextHolder.getContext().getAuthentication().getDetails();
-		System.err.println("details="+details);
-		Collection<? extends GrantedAuthority> authorities = SecurityContextHolder.getContext().getAuthentication().getAuthorities();
-		System.err.println("authorities="+authorities);
+		System.err.println("details=" + details);
 		
+		Collection<? extends GrantedAuthority> authorities = SecurityContextHolder.getContext().getAuthentication()
+				.getAuthorities();
+		System.err.println("authorities=" + authorities);
+
 		boolean authenticated = SecurityContextHolder.getContext().getAuthentication().isAuthenticated();
-		System.err.println("authenticated="+authenticated);
-		
+		System.err.println("authenticated=" + authenticated);
+
 		String header = request.getHeader("token");
-		System.err.println("header="+header);
-		
-		
+		System.err.println("header=" + header);
+
 		return ResponseEntity.success("登录信息", details);
 	}
-	
-	
-	/**
-	 * 测试mybatis查询
-	 * @param id
-	 * @return
-	 */
-	@GetMapping("/test/{id}")
-	public Object userTest(@PathVariable String id) {
-		User user = userMapper.selectOne(new User().setId(Integer.parseInt(id)));
-		return user;
-	}
-	
-	/**
-	 * 测试全局异常处理
-	 * @return
-	 */
-	@GetMapping("/exception")
-	public Object testException() {
-		throw new AuthException(500, "测试全局异常是否有作用");
-	}
-	
-	
-	
+
 }

@@ -18,6 +18,7 @@ public class HandlerGlobalException {
 	 */
 	@ExceptionHandler(value = Exception.class)
 	public Object handlerDefaultException(HttpServletRequest request, Exception e) throws Exception {
+		e.printStackTrace();
 		log.info("异常信息:{}", e.getMessage());
 		return ResponseEntity.fail(500, e.getMessage());
 	}
@@ -27,6 +28,7 @@ public class HandlerGlobalException {
 	 */
 	@ExceptionHandler(value = AuthException.class)
 	public Object handlerUserAuthException(HttpServletRequest request, AuthException e) throws Exception {
+		e.printStackTrace();
 		log.info("异常信息:{},异常状态码:{}", e.getMessage(), e.getCode());
 		return ResponseEntity.fail(e.getCode(), e.getMessage());
 	}
@@ -36,6 +38,7 @@ public class HandlerGlobalException {
 	 */
 	@ExceptionHandler(value = ServiceException.class)
 	public Object handlerServiceException(HttpServletRequest request, ServiceException e) throws Exception {
+		e.printStackTrace();
 		log.info("异常信息:{},异常状态码:{}", e.getMessage(), e.getCode());
 		return ResponseEntity.fail(e.getCode(), e.getMessage());
 	}

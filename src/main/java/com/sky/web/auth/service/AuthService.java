@@ -1,5 +1,6 @@
-package com.sky.auth.service;
+package com.sky.web.auth.service;
 
+import com.sky.web.auth.request.RegisterReq;
 import com.sky.web.user.pojo.User;
 
 public interface AuthService {
@@ -9,12 +10,12 @@ public interface AuthService {
 	 * @param user
 	 * @return
 	 */
-	User register(User user);
+	User register(RegisterReq registerReq);
 	
 	/**
 	 * 用户登录,返回新的token
 	 */
-	String login(String username,String password);
+	String login(String phone,String password);
 	
 	/**
 	 * 刷新token

@@ -47,18 +47,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 			throws ServletException, IOException {
 
 		log.info("请求经过JwtAuthenticationFilter过滤器.....");
-		System.err.println("请求经过JwtAuthenticationFilter过滤器.....");
 		
 		String url = request.getRequestURI();
 		log.info("当前访问的url = {}",url);
 		
-		System.err.println(String.format("当前访问的url = %s", url));
-		
-		/**
-		 * 根据URL拦截
-		 */
-		
-
 		// 1.获取token请求头
 		final String authHeader = request.getHeader(tokenHeader);
 

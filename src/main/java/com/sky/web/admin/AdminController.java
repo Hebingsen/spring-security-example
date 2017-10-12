@@ -1,11 +1,9 @@
 package com.sky.web.admin;
 
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.sky.base.ResponseEntity;
 import com.sky.exception.AuthException;
 
