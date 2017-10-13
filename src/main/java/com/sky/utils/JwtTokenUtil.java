@@ -33,17 +33,13 @@ public class JwtTokenUtil {
 	@Autowired
 	private Environment env;
 	
-	//@Autowired
-	//private 
-	
-	
 	/**
-	 * 根据token获取用户名
+	 * 根据token获取登录名
 	 * @param token
 	 * @return
 	 */
 	public String getUsernameFormToken(String token) {
-		String username = parser(token).get("username", String.class);
+		String username = parser(token).get("phone", String.class);
 		return username;
 	}
 	
@@ -64,11 +60,12 @@ public class JwtTokenUtil {
 	 * @param userDetails
 	 * @return
 	 */
-	public String generateToken(UserDetails userDetails) {
+	public String generateToken(SecurityUser userDetails) {
 		Map<String,Object> claims = new HashMap<String,Object>();
 		claims.put("username", userDetails.getUsername());//用户名
 		claims.put("authorities", userDetails.getAuthorities());//角色权限信息
-		//claims.put("redis-key", "redis:key:"+);//存储于redis中的key(目前随机生成)
+		claims.put("phone", userDetails.getPhone());
+		claims.put("id", userDetails.getId());
 		String compact = Jwts.builder().signWith(SignatureAlgorithm.HS512, env.getProperty("jwt.secret"))
 				.setClaims(claims)
 				.compact();
@@ -83,8 +80,8 @@ public class JwtTokenUtil {
 	 * @param token			用户token
 	 * @return
 	 */
-	public boolean validateToken(UserDetails userDetails, String token) {
-		return userDetails.getUsername().equals(getUsernameFormToken(token));
+	public boolean validateToken(SecurityUser userDetails, String token) {
+		return userDetails.getPhone().equals(getUsernameFormToken(token));
 	}
 
 	
@@ -98,6 +95,12 @@ public class JwtTokenUtil {
 		System.out.println("username="+username);
 		
 		System.out.println(Base64.encode("bingsen.he"));
+		
+		
+		String token = "eyJhbGciOiJIUzUxMiJ9.eyJhdXRob3JpdGllcyI6W3siYXV0aG9yaXR5IjoiUk9MRV9VU0VSIn1dLCJ1c2VybmFtZSI6IuS5kOatpOS4jeW9vCJ9.7WmjCxh46p7Mh-WeguoqB_tvbRdVLv8Q-LLzf3EfZQ_zclZp"
+		+ "c_yNXkl5WIebMD8TuBwAAxJIH8ZG_Lw_5CNVdg";
+		Claims parser = new JwtTokenUtil().parser(token);
+		System.err.println(parser);
 	}
 	
 }

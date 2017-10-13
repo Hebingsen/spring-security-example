@@ -1,11 +1,14 @@
 package com.sky.web.user.pojo;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Transient;
 
 import lombok.Data;
 import lombok.Getter;
@@ -30,13 +33,15 @@ public class User implements Serializable{
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	protected Long id;
 	
-	private String userName;
+	protected String userName;
 	
-	private String password;
+	protected String password;
 	
-	private String phone;
+	protected String phone;
 	
-	private Date createTime;
+	protected Date createTime;
 	
+	@Transient
+	protected List<Role> roles = new ArrayList<Role>();
 
 }

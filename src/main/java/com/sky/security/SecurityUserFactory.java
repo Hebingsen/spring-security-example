@@ -1,6 +1,5 @@
 package com.sky.security;
 
-import org.springframework.beans.BeanUtils;
 
 import com.sky.web.user.pojo.User;
 /**
@@ -19,8 +18,13 @@ public final class SecurityUserFactory {
 	 * @return
 	 */
 	public static SecurityUser create(User user) {
-		SecurityUser securityUser = new SecurityUser();
-		BeanUtils.copyProperties(user, securityUser);
+		SecurityUser securityUser = new SecurityUser(
+				user.getId(),
+				user.getUserName(),
+				user.getPassword(),
+				user.getPhone(),
+				user.getCreateTime(),
+				user.getRoles());
 		return securityUser;
 	}
 

@@ -2,10 +2,14 @@ package com.sky.security;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
+import java.util.List;
+
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.sky.web.user.pojo.Role;
 import com.sky.web.user.pojo.User;
 
 public class SecurityUser extends User implements UserDetails{
@@ -13,19 +17,35 @@ public class SecurityUser extends User implements UserDetails{
 	private static final long serialVersionUID = 1L;
 	
 	private Collection<? extends GrantedAuthority> authorities;
+	
+	public SecurityUser(Collection<? extends GrantedAuthority> authorities) {
+		this.authorities = authorities;
+	}
+	
+	public SecurityUser(Long id, String userName, String password, String phone, Date createTime, List<Role> roles) {
+		this.id = id;
+		this.userName = userName;
+		this.password = password;
+		this.phone = phone;
+		this.createTime = createTime;
+		List<GrantedAuthority> grantedAuthoritys =  new ArrayList<GrantedAuthority>();
+		for (Role role : roles) {
+			grantedAuthoritys.add(new SimpleGrantedAuthority(role.getRoleCode()));
+		}
+		this.authorities = grantedAuthoritys;
+	}
+	
+	public SecurityUser() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
 
 	/**
 	 * 查询并返回权限信息
 	 */
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		
-		ArrayList<GrantedAuthority> roles = new ArrayList<GrantedAuthority>();
-		//roles.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
-		//roles.add(new SimpleGrantedAuthority("ROLE_SUPER_ADMIN"));
-		roles.add(new SimpleGrantedAuthority("ROLE_USER"));
-		
-		return roles;
+		return authorities;
 	}
 
 	@Override

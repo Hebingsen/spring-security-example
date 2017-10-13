@@ -9,6 +9,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import com.sky.security.MyUserDetailsService;
+import com.sky.security.SecurityUser;
 import com.sky.utils.JwtTokenUtil;
 import com.sky.utils.U;
 import com.sky.web.auth.request.RegisterReq;
@@ -72,7 +73,7 @@ public class AuthServiceImpl implements AuthService {
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 		
 		//获取用户详情信息
-		UserDetails userDetails = userDetailsService.loadUserByUsername(phone);
+		SecurityUser userDetails = (SecurityUser) userDetailsService.loadUserByUsername(phone);
 		
 		return jwtTokenUtil.generateToken(userDetails);
 	}

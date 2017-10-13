@@ -26,7 +26,7 @@ public class Handler403Exception implements AccessDeniedHandler {
 	public void handle(HttpServletRequest request, HttpServletResponse response,
 			AccessDeniedException accessDeniedException) throws IOException, ServletException {
 		// 返回json形式的错误信息
-		String result = ResponseEntity.fail(401, "权限不足").toJson();
+		String result = ResponseEntity.fail(401, "不允许访问").toJson();
 		response.setCharacterEncoding("UTF-8");
 		response.setContentType("application/json");
 		response.getWriter().println(result);

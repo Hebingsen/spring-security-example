@@ -16,6 +16,7 @@ import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.web.filter.OncePerRequestFilter;
 import com.sky.security.MyUserDetailsService;
+import com.sky.security.SecurityUser;
 import com.sky.utils.JwtTokenUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -69,7 +70,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 			if (StrUtil.isNotBlank(username) && authentication == null) {
 
 				// 5.1.获取用户详情
-				UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+				SecurityUser userDetails = (SecurityUser)userDetailsService.loadUserByUsername(username);
 
 				// 5.2.将token与用户详情进行校验
 				boolean flag = jwtTokenUtil.validateToken(userDetails, authToken);

@@ -2,7 +2,6 @@ package com.sky.base;
 
 import com.google.gson.Gson;
 import com.sky.exception.ServiceException;
-
 import lombok.Data;
 import lombok.ToString;
 import lombok.experimental.Accessors;
@@ -62,7 +61,7 @@ public class ResponseEntity {
 	}
 	
 	/**
-	 * 转化为json字符串格式
+	 * 转化为json字符串格式(自动忽略为null的字段)
 	 * @return
 	 */
 	public String toJson(){

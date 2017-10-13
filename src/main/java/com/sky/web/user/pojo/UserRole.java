@@ -2,6 +2,8 @@ package com.sky.web.user.pojo;
 
 import java.io.Serializable;
 
+import javax.persistence.Table;
+
 import lombok.Data;
 import lombok.ToString;
 import lombok.experimental.Accessors;
@@ -15,6 +17,7 @@ import lombok.experimental.Accessors;
 @Data
 @ToString
 @Accessors(chain = true)
+@Table(name = "USER_ROLE")
 public class UserRole implements Serializable{
 
 	private static final long serialVersionUID = 1L;

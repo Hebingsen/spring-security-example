@@ -6,13 +6,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import com.sky.annotation.RestfulApi;
 import com.sky.base.ResponseEntity;
 import com.sky.redis.RedisUtil;
+import com.sky.utils.JwtTokenUtil;
 import com.sky.utils.MD5;
 import com.sky.web.auth.request.RegisterReq;
 import com.sky.web.auth.service.AuthService;
-import com.sky.web.user.mapper.UserMapper;
 import com.sky.web.user.pojo.User;
+
+import io.jsonwebtoken.Claims;
 import lombok.extern.slf4j.Slf4j;
-import tk.mybatis.mapper.entity.Example;
 
 @Slf4j
 @RestfulApi("/auth")
@@ -23,6 +24,9 @@ public class AuthController {
 
 	@Autowired
 	private RedisUtil redisUtil;
+	
+	@Autowired
+	private JwtTokenUtil jwt;
 
 	/**
 	 * 登录
@@ -60,5 +64,17 @@ public class AuthController {
 
 		return ResponseEntity.success("注册成功", user);
 	}
+	
+	
+	/**
+	 * 解析token
+	 * @param token
+	 */
+	@PostMapping("/parse")
+	public ResponseEntity parseToken(String token) {
+		Claims parser = jwt.parser(token);
+		return ResponseEntity.success("解析成功",parser);
+	}
+	
 
 }

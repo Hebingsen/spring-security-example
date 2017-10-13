@@ -24,12 +24,7 @@ public class AdminController {
 	
 	@GetMapping("/")
 	public Object get() {
-		try {
-			return ResponseEntity.success("正在访问AdminController");
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AuthException(0, "111111111111");
-		}
+		return ResponseEntity.success("正在访问AdminController");
 	}
 	
 }
