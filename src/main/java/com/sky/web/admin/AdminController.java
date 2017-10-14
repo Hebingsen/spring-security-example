@@ -4,8 +4,13 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.sky.annotation.RestfulApi;
 import com.sky.base.ResponseEntity;
 import com.sky.exception.AuthException;
+
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 
 /**
  * 只有用户角色为admin时才可以进行访问
@@ -17,11 +22,12 @@ import com.sky.exception.AuthException;
  * @时间 2017年9月28日
  * @公司 sky工作室
  */
-@RestController
-@RequestMapping("/api/admin")
+@RestfulApi("/api/admin")
 @PreAuthorize("hasRole('ADMIN')")
+@Api("管理员相关api")
 public class AdminController {
 	
+	@ApiOperation(value = "访问管理员接口")
 	@GetMapping("/")
 	public Object get() {
 		return ResponseEntity.success("正在访问AdminController");

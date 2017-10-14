@@ -15,6 +15,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.web.filter.OncePerRequestFilter;
+
+import com.sky.exception.AuthException;
+import com.sky.redis.RedisUtil;
 import com.sky.security.MyUserDetailsService;
 import com.sky.security.SecurityUser;
 import com.sky.utils.JwtTokenUtil;
@@ -42,6 +45,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 	
 	@Autowired
 	private JwtTokenUtil jwtTokenUtil;
+	
+	@Autowired
+	private RedisUtil redisUtil;
 
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
@@ -56,9 +62,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 		final String authHeader = request.getHeader(tokenHeader);
 
 		if (StrUtil.isNotBlank(authHeader) && authHeader.startsWith(jwtHead)) {
+			
 			// 2.获取token
 			final String authToken = authHeader.substring(jwtHead.length(), authHeader.length());
 			request.setAttribute("token", authToken);
+			
+			// 3.判断token 是否已过期
+			//if(!redisUtil.exists(authToken))
+				//throw new AuthException(0, "token已过期");
+			
 			// 3.根据token获取用户名
 			final String username = jwtTokenUtil.getUsernameFormToken(authToken);
 			log.info("根据token获取用户名={}", username);

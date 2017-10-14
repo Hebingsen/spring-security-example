@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import com.sky.annotation.RestfulApi;
 import com.sky.base.ResponseEntity;
+import com.sky.exception.AuthException;
 import com.sky.redis.RedisUtil;
 import com.sky.utils.JwtTokenUtil;
 import com.sky.utils.MD5;
@@ -13,10 +14,13 @@ import com.sky.web.auth.service.AuthService;
 import com.sky.web.user.pojo.User;
 
 import io.jsonwebtoken.Claims;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestfulApi("/auth")
+@Api("用户鉴权相关api")
 public class AuthController {
 
 	@Autowired
@@ -28,12 +32,7 @@ public class AuthController {
 	@Autowired
 	private JwtTokenUtil jwt;
 
-	/**
-	 * 登录
-	 * @param phone 登录名
-	 * @param password
-	 * @return
-	 */
+	@ApiOperation("用户登录")
 	@PostMapping("/login")
 	public ResponseEntity login(String phone, String password) {
 		
@@ -49,12 +48,7 @@ public class AuthController {
 		return ResponseEntity.success("登录成功", token);
 	}
 
-	/**
-	 * 注册
-	 * 
-	 * @param userReq
-	 * @return
-	 */
+	@ApiOperation("用户注册")
 	@PostMapping("/register")
 	public ResponseEntity register(RegisterReq registerReq) {
 		log.info("注册用户,请求信息:{}", registerReq);
@@ -66,14 +60,17 @@ public class AuthController {
 	}
 	
 	
-	/**
-	 * 解析token
-	 * @param token
-	 */
+	@ApiOperation("解析token")
 	@PostMapping("/parse")
 	public ResponseEntity parseToken(String token) {
 		Claims parser = jwt.parser(token);
 		return ResponseEntity.success("解析成功",parser);
+	}
+	
+	@ApiOperation("测试异常")
+	@GetMapping("/test")
+	public void test() {
+		throw new AuthException(0,"报错");
 	}
 	
 

@@ -13,6 +13,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import com.sky.exception.AuthException;
+import com.sky.exception.ServiceException;
 import com.sky.security.SecurityUser;
 import com.xiaoleilu.hutool.lang.Base64;
 
@@ -81,7 +82,12 @@ public class JwtTokenUtil {
 	 * @return
 	 */
 	public boolean validateToken(SecurityUser userDetails, String token) {
-		return userDetails.getPhone().equals(getUsernameFormToken(token));
+		try {
+			userDetails.getPhone().equals(getUsernameFormToken(token));
+			throw new AuthException(5,"报错啦");
+		} catch (AuthException e) {
+			throw new ServiceException(100, "异常转换");
+		}
 	}
 
 	

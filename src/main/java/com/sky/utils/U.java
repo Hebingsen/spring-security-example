@@ -51,10 +51,7 @@ public class U {
 			Object obj = clazz[0].newInstance();
 			if (obj instanceof Date)
 				return (T) new Date();
-			else if (obj instanceof Long) {
-				Long long1 = new Long(new Date().getTime());
-				return null;
-			} else if (obj instanceof String)
+			else if (obj instanceof String)
 				return (T) new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
 			else
 				return null;

@@ -9,7 +9,12 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.sky.annotation.RestfulApi;
 import com.sky.base.ResponseEntity;
+
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 
 /**
  * 用户API接口,需要有ROLE_USER权限才可以进行访问@PreAuthorize("hasRole('USER')")
@@ -17,17 +22,15 @@ import com.sky.base.ResponseEntity;
  * @时间 2017年10月12日
  * @公司 sky工作室
  */
-@RestController
-@RequestMapping("/api/user")
+@RestfulApi("/api/user")
 @PreAuthorize("hasRole('USER')")
+@Api("用户相关api")
 public class UserController {
 
 	@Autowired
 	private HttpServletRequest request;
 
-	/**
-	 * 获取当前登录用户信息
-	 */
+	@ApiOperation("获取当前登录用户信息")
 	@GetMapping("/login-info")
 	public Object loginInfo() {
 		

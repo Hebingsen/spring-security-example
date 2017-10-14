@@ -7,6 +7,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -35,16 +36,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Autowired
 	private Handler403Exception accessDeniedHandler;
-	
+
 	@Autowired
 	private Handler401Exception entryPointUnauthorizedHandler;
-	
+
 	/**
 	 * 鉴权规则
 	 */
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-
 		// 使用jwt,不存在csrf的问题
 		http.csrf().disable();
 
@@ -62,17 +62,17 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				// 鉴权规则
 				.authorizeRequests()
 				// 匹配无须鉴权的规则:/home,/,静态资源允许匿名访问
-				.antMatchers(HttpMethod.GET, "/", "/home", "/favicon.ico", "/**/*.html", "/**/*.js", "/**/*.css")
-				.permitAll()
+				.antMatchers(HttpMethod.GET, "/", "/home").permitAll()
 
 				// 对于获取token的rest api要允许匿名访问
 				.antMatchers("/auth/**").permitAll()
 
 				// 除上面外的所有请求全部需要鉴权认证
 				.anyRequest().authenticated();
-		
-		//配置401与403错误处理器
-		http.exceptionHandling().authenticationEntryPoint(entryPointUnauthorizedHandler).accessDeniedHandler(accessDeniedHandler);
+
+		// 配置401与403错误处理器
+		http.exceptionHandling().authenticationEntryPoint(entryPointUnauthorizedHandler)
+				.accessDeniedHandler(accessDeniedHandler);
 	}
 
 	/**
@@ -86,6 +86,19 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 		// 创建自己自定义的用户认证器
 		auth.userDetailsService(myUserDetailsService).passwordEncoder(md5PasswordEncode());
+	}
+
+	/**
+	 * WebSecurity配置,比如拦截的匹配规则等等..
+	 */
+	@Override
+	public void configure(WebSecurity web) throws Exception {
+		// swagger 在线api文档路径规则
+		web.ignoring().antMatchers("/configuration/**", "/images/**", "/v2/api-docs", "/swagger-ui.html",
+				"/swagger-resources/**", "/webjars/springfox-swagger-ui/**");
+
+		// 静态资源
+		web.ignoring().antMatchers("/resource/**", "/favicon.ico", "/**/*.html", "/**/*.js", "/**/*.css");
 	}
 
 	/**
