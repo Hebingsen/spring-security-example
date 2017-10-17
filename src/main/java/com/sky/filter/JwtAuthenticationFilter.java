@@ -17,6 +17,7 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.sky.exception.AuthException;
+import com.sky.handler.Handler401Exception;
 import com.sky.redis.RedisUtil;
 import com.sky.security.MyUserDetailsService;
 import com.sky.security.SecurityUser;
@@ -42,74 +43,109 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
 	@Autowired
 	private MyUserDetailsService userDetailsService;
-	
+
 	@Autowired
 	private JwtTokenUtil jwtTokenUtil;
-	
+
 	@Autowired
 	private RedisUtil redisUtil;
+
+	@Autowired
+	private Handler401Exception authenticationEntryPoint;
 
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {
 
+		// 是否放行请求标记
+		boolean passFlag = true;
+
 		log.info("请求经过JwtAuthenticationFilter过滤器.....");
-		
+
 		String url = request.getRequestURI();
-		log.info("当前访问的url = {}",url);
-		
+		log.info("当前访问的url = {}", url);
+
 		// 1.获取token请求头
 		final String authHeader = request.getHeader(tokenHeader);
 
 		if (StrUtil.isNotBlank(authHeader) && authHeader.startsWith(jwtHead)) {
 			
-			// 2.获取token
-			final String authToken = authHeader.substring(jwtHead.length(), authHeader.length());
-			request.setAttribute("token", authToken);
+			// 通过规则截取真正的token
+			String authToken = null;
+			try {
+				authToken = authHeader.substring(jwtHead.length(), authHeader.length());
+			} catch (Exception e) {
+				passFlag = false;
+				AuthException authException = new AuthException(403, "非法令牌");
+				authenticationEntryPoint.handler(request, response, authException);
+			}
 			
-			// 3.判断token 是否已过期
-			//if(!redisUtil.exists(authToken))
-				//throw new AuthException(0, "token已过期");
-			
-			// 3.根据token获取用户名
-			final String username = jwtTokenUtil.getUsernameFormToken(authToken);
-			log.info("根据token获取用户名={}", username);
+			// 判断token是否为空
+			if(StrUtil.isBlank(authToken) && passFlag) {
+				passFlag = false;
+				AuthException authException = new AuthException(403, "令牌为空");
+				authenticationEntryPoint.handler(request, response, authException);
+			}
 
-			// 4.获取当前的security的身份认证(如果身份认证为空的话,即代表无权限,只能访问"匿名访问资源")
-			Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+			// 判断token 是否已过期-->将token置为null
+			if (!redisUtil.exists(authToken) && passFlag) {
+				passFlag = false;
+				AuthException authException = new AuthException(403, "无效令牌");
+				authenticationEntryPoint.handler(request, response, authException);
+			}
 
-			// 5.如果通过token能获取到用户信息,则设置当前security的身份认证
-			if (StrUtil.isNotBlank(username) && authentication == null) {
-
-				// 5.1.获取用户详情
-				SecurityUser userDetails = (SecurityUser)userDetailsService.loadUserByUsername(username);
-
-				// 5.2.将token与用户详情进行校验
-				boolean flag = jwtTokenUtil.validateToken(userDetails, authToken);
-				log.info("token与用户详情校验结果返回:{}",flag);
-				// 5.3.通过检验,则设置通过当前的身份认证
-				if (flag) {
-					// 用户名,密码(在此不做存储),设置权限角色表示通过验证
-					UsernamePasswordAuthenticationToken userAuthentication = new UsernamePasswordAuthenticationToken(
-							userDetails.getUsername(), null, userDetails.getAuthorities());
-
-					// 如果会话已经存在(它不会创建一个)，则记录远程地址并设置会话Id。
-					// 参数:请求已收到身份验证请求
-					// new WebAuthenticationDetails(request);
-
-					// 当它希望创建一个新的身份验证细节实例时被一个类调用。
-					WebAuthenticationDetails webAuthenticationDetails = new WebAuthenticationDetailsSource()
-							.buildDetails(request);
-					userAuthentication.setDetails(webAuthenticationDetails);
-					SecurityContextHolder.getContext().setAuthentication(userAuthentication);
-				}
-
+			// 设置认证信息
+			if (passFlag) {
+				check(request, authToken);
 			}
 
 		}
 
-		// 放行请求
-		filterChain.doFilter(request, response);
+		if (passFlag) {
+			// 放行请求
+			filterChain.doFilter(request, response);
+		}
+	}
+
+	/**
+	 * 根据token校验信息
+	 * 
+	 * @param authToken
+	 */
+	public void check(HttpServletRequest request, String authToken) {
+
+		// 3.根据token获取用户名
+		final String username = jwtTokenUtil.getUsernameFormToken(authToken);
+		log.info("根据token获取用户名={}", username);
+
+		// 4.获取当前的security的身份认证(如果身份认证为空的话,即代表无权限,只能访问"匿名访问资源")
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+		// 5.如果通过token能获取到用户信息,则设置当前security的身份认证
+		if (StrUtil.isNotBlank(username) && authentication == null) {
+			// 5.1.获取用户详情
+			SecurityUser userDetails = (SecurityUser) userDetailsService.loadUserByUsername(username);
+			// 5.2.将token与用户详情进行校验
+			boolean flag = jwtTokenUtil.validateToken(userDetails, authToken);
+			// 5.3.通过检验,则设置通过当前的身份认证
+			if (flag) {
+				setAuthentication(request, userDetails);
+			}
+		}
+	}
+
+	/**
+	 * 设置认证信息
+	 */
+	public void setAuthentication(HttpServletRequest request, SecurityUser userDetails) {
+		// 用户名,密码(在此不做存储),设置权限角色表示通过验证
+		UsernamePasswordAuthenticationToken userAuthentication = new UsernamePasswordAuthenticationToken(
+				userDetails.getUsername(), null, userDetails.getAuthorities());
+
+		// 当它希望创建一个新的身份验证细节实例时被一个类调用。
+		WebAuthenticationDetails webAuthenticationDetails = new WebAuthenticationDetailsSource().buildDetails(request);
+		userAuthentication.setDetails(webAuthenticationDetails);
+		SecurityContextHolder.getContext().setAuthentication(userAuthentication);
 	}
 
 }

@@ -3,20 +3,15 @@ package com.sky.utils;
 
 import java.util.HashMap;
 import java.util.Map;
-
 import javax.crypto.SecretKey;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
-
 import com.sky.exception.AuthException;
 import com.sky.exception.ServiceException;
 import com.sky.security.SecurityUser;
 import com.xiaoleilu.hutool.lang.Base64;
-
+import com.xiaoleilu.hutool.util.StrUtil;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -40,6 +35,7 @@ public class JwtTokenUtil {
 	 * @return
 	 */
 	public String getUsernameFormToken(String token) {
+		if(StrUtil.isBlank(token)) return null;
 		String username = parser(token).get("phone", String.class);
 		return username;
 	}

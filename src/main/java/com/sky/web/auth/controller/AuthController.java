@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import com.sky.annotation.RestfulApi;
 import com.sky.base.ResponseEntity;
 import com.sky.exception.AuthException;
+import com.sky.exception.ServiceException;
 import com.sky.redis.RedisUtil;
 import com.sky.utils.JwtTokenUtil;
 import com.sky.utils.MD5;
@@ -18,9 +19,14 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * @作者 乐此不彼
+ * @时间 2017年10月15日
+ * @公司 sky工作室
+ */
 @Slf4j
 @RestfulApi("/auth")
-@Api("用户鉴权相关api")
+@Api(description = "鉴权模块")
 public class AuthController {
 
 	@Autowired
@@ -70,7 +76,7 @@ public class AuthController {
 	@ApiOperation("测试异常")
 	@GetMapping("/test")
 	public void test() {
-		throw new AuthException(0,"报错");
+		throw new ServiceException(0,"报错");
 	}
 	
 

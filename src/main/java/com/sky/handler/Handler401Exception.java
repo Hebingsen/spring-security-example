@@ -8,6 +8,9 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
 import com.sky.base.ResponseEntity;
+import com.sky.exception.AuthException;
+import com.xiaoleilu.hutool.http.HttpStatus;
+import com.xiaoleilu.hutool.util.StrUtil;
 
 /**
  * 定义 401 处理器，实现 AuthenticationEntryPoint 接口
@@ -25,12 +28,26 @@ public class Handler401Exception implements AuthenticationEntryPoint {
 	@Override
 	public void commence(HttpServletRequest request, HttpServletResponse response,
 			AuthenticationException authException) throws IOException, ServletException {
+		
+		String msg = "请先登录";
+		int code = HttpStatus.HTTP_UNAUTHORIZED;
+		
+		if(authException instanceof AuthException) {
+			msg = authException.getMessage();
+			code = ((AuthException) authException).getCode();
+		}
+		
 		// 返回json形式的错误信息
-		String result = ResponseEntity.fail(401, "请先登录").toJson();
+		String result = ResponseEntity.fail(401, msg).toJson();
 		response.setCharacterEncoding("UTF-8");
 		response.setContentType("application/json");
 		response.getWriter().println(result);
 		response.getWriter().flush();
+	}
+	
+	
+	public void handler(HttpServletRequest request, HttpServletResponse response,AuthenticationException authException) throws IOException, ServletException {
+		commence(request, response, authException);
 	}
 
 }

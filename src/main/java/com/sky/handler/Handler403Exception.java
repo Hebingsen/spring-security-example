@@ -8,6 +8,7 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.stereotype.Component;
 import com.sky.base.ResponseEntity;
+import com.xiaoleilu.hutool.http.HttpStatus;
 
 /**
  * 定义 403 处理器，实现 AccessDeniedHandler 接口
@@ -24,9 +25,8 @@ public class Handler403Exception implements AccessDeniedHandler {
 	 */
 	@Override
 	public void handle(HttpServletRequest request, HttpServletResponse response,
-			AccessDeniedException accessDeniedException) throws IOException, ServletException {
-		// 返回json形式的错误信息
-		String result = ResponseEntity.fail(401, "不允许访问").toJson();
+			AccessDeniedException e) throws IOException, ServletException {
+		String result = ResponseEntity.fail(HttpStatus.HTTP_UNAUTHORIZED, "无权限访问").toJson();
 		response.setCharacterEncoding("UTF-8");
 		response.setContentType("application/json");
 		response.getWriter().println(result);

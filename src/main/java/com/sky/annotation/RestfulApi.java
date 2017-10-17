@@ -4,12 +4,15 @@ import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 import java.lang.annotation.Documented;
+import java.lang.annotation.Inherited;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
 import org.springframework.core.annotation.AliasFor;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import io.swagger.annotations.Api;
 
 /**
  * 组合@RestController与@RequestMapping注解
@@ -22,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Target(TYPE)
 @RequestMapping
 @RestController
+@Inherited
 public @interface RestfulApi {
 	
 	@AliasFor("path")

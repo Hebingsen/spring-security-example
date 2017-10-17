@@ -24,7 +24,7 @@ import io.swagger.annotations.ApiOperation;
  */
 @RestfulApi("/api/admin")
 @PreAuthorize("hasRole('ADMIN')")
-@Api("管理员相关api")
+@Api(description = "管理模块")
 public class AdminController {
 	
 	@ApiOperation(value = "访问管理员接口")

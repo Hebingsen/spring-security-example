@@ -13,7 +13,6 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-
 import com.sky.filter.JwtAuthenticationFilter;
 import com.sky.handler.Handler401Exception;
 import com.sky.handler.Handler403Exception;
@@ -39,7 +38,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Autowired
 	private Handler401Exception entryPointUnauthorizedHandler;
-
+	
 	/**
 	 * 鉴权规则
 	 */
@@ -99,6 +98,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 		// 静态资源
 		web.ignoring().antMatchers("/resource/**", "/favicon.ico", "/**/*.html", "/**/*.js", "/**/*.css");
+		
 	}
 
 	/**

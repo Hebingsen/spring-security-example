@@ -1,6 +1,8 @@
 package com.sky.exception;
 
 
+import org.springframework.security.core.AuthenticationException;
+
 import lombok.Data;
 
 /**
@@ -10,27 +12,24 @@ import lombok.Data;
  * @公司 sky工作室
  */
 @Data
-public class AuthException extends RuntimeException {
+public class AuthException extends AuthenticationException {
 
 	private static final long serialVersionUID = 17174741487766414L;
 
 	private int code;
-	private String message;
 
 	public AuthException(String message) {
 		super(message);
-	}
-
-	public AuthException(Throwable cause) {
-		super(cause);
 	}
 
 	public AuthException(String message, Throwable cause) {
 		super(message, cause);
 	}
 
-	public AuthException(int code, String message) {
+	public AuthException(int code,String msg) {
+		super(msg);
 		this.code = code;
-		this.message = message;
 	}
+	
+	
 }
