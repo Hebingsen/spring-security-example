@@ -3,6 +3,8 @@ package com.sky.web.auth.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 import com.sky.annotation.RestfulApi;
 import com.sky.base.ResponseEntity;
 import com.sky.exception.AuthException;
@@ -40,7 +42,7 @@ public class AuthController {
 
 	@ApiOperation("用户登录")
 	@PostMapping("/login")
-	public ResponseEntity login(String phone, String password) {
+	public ResponseEntity login(@RequestParam String phone, @RequestParam String password) {
 		
 		log.info("用户登录,phone={},password={}", phone, password);
 

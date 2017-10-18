@@ -9,6 +9,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 import com.sky.exception.AuthException;
 import com.sky.exception.ServiceException;
+import com.sky.handler.Handler401Exception;
 import com.sky.security.SecurityUser;
 import com.xiaoleilu.hutool.lang.Base64;
 import com.xiaoleilu.hutool.util.StrUtil;
@@ -28,6 +29,9 @@ public class JwtTokenUtil {
 	
 	@Autowired
 	private Environment env;
+	
+	@Autowired
+	private Handler401Exception authenticationEntryPoint;
 	
 	/**
 	 * 根据token获取登录名
@@ -78,12 +82,7 @@ public class JwtTokenUtil {
 	 * @return
 	 */
 	public boolean validateToken(SecurityUser userDetails, String token) {
-		try {
-			userDetails.getPhone().equals(getUsernameFormToken(token));
-			throw new AuthException(5,"报错啦");
-		} catch (AuthException e) {
-			throw new ServiceException(100, "异常转换");
-		}
+		return userDetails.getPhone().equals(getUsernameFormToken(token));
 	}
 
 	

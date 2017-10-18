@@ -10,7 +10,6 @@ import org.springframework.stereotype.Component;
 import com.sky.base.ResponseEntity;
 import com.sky.exception.AuthException;
 import com.xiaoleilu.hutool.http.HttpStatus;
-import com.xiaoleilu.hutool.util.StrUtil;
 
 /**
  * 定义 401 处理器，实现 AuthenticationEntryPoint 接口
@@ -38,7 +37,7 @@ public class Handler401Exception implements AuthenticationEntryPoint {
 		}
 		
 		// 返回json形式的错误信息
-		String result = ResponseEntity.fail(401, msg).toJson();
+		String result = ResponseEntity.fail(code, msg).toJson();
 		response.setCharacterEncoding("UTF-8");
 		response.setContentType("application/json");
 		response.getWriter().println(result);

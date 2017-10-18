@@ -11,11 +11,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.web.filter.OncePerRequestFilter;
-
 import com.sky.exception.AuthException;
 import com.sky.handler.Handler401Exception;
 import com.sky.redis.RedisUtil;
@@ -67,9 +65,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
 		// 1.获取token请求头
 		final String authHeader = request.getHeader(tokenHeader);
+		if (StrUtil.isNotBlank(authHeader) && !authHeader.startsWith(jwtHead)) {
+			passFlag = false;
+			AuthException authException = new AuthException(403, "非法令牌");
+			authenticationEntryPoint.handler(request, response, authException);
+		}
 
-		if (StrUtil.isNotBlank(authHeader) && authHeader.startsWith(jwtHead)) {
-			
+		if (StrUtil.isNotBlank(authHeader) && authHeader.startsWith(jwtHead) && passFlag) {
+
 			// 通过规则截取真正的token
 			String authToken = null;
 			try {
@@ -79,9 +82,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 				AuthException authException = new AuthException(403, "非法令牌");
 				authenticationEntryPoint.handler(request, response, authException);
 			}
-			
+
 			// 判断token是否为空
-			if(StrUtil.isBlank(authToken) && passFlag) {
+			if (StrUtil.isBlank(authToken) && passFlag) {
 				passFlag = false;
 				AuthException authException = new AuthException(403, "令牌为空");
 				authenticationEntryPoint.handler(request, response, authException);
@@ -129,6 +132,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 			boolean flag = jwtTokenUtil.validateToken(userDetails, authToken);
 			// 5.3.通过检验,则设置通过当前的身份认证
 			if (flag) {
+				System.err.println("设置认证信息");
 				setAuthentication(request, userDetails);
 			}
 		}
