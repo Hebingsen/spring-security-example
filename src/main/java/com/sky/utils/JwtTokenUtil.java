@@ -8,8 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 import com.sky.exception.AuthException;
-import com.sky.exception.ServiceException;
-import com.sky.handler.Handler401Exception;
 import com.sky.security.SecurityUser;
 import com.xiaoleilu.hutool.lang.Base64;
 import com.xiaoleilu.hutool.util.StrUtil;
@@ -29,9 +27,6 @@ public class JwtTokenUtil {
 	
 	@Autowired
 	private Environment env;
-	
-	@Autowired
-	private Handler401Exception authenticationEntryPoint;
 	
 	/**
 	 * 根据token获取登录名
@@ -84,7 +79,6 @@ public class JwtTokenUtil {
 	public boolean validateToken(SecurityUser userDetails, String token) {
 		return userDetails.getPhone().equals(getUsernameFormToken(token));
 	}
-
 	
 	public static void main(String[] args) {
 		SecretKey key = MacProvider.generateKey();

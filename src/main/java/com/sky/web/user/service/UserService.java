@@ -12,10 +12,23 @@ public interface UserService {
 
 	/**
 	 * 根据手机号查询用户信息
-	 * @param username
+	 * @param phone
 	 * @return
 	 */
-	User findByPhone(String username);
+	User findByPhone(String phone);
+	
+	/**
+	 * 用户注册
+	 * @param user
+	 * @return
+	 */
+	User register(User user);
+	
+	/**
+	 * 更新用户信息
+	 * @param user
+	 */
+	void updateUser(User user);
 
 }
  

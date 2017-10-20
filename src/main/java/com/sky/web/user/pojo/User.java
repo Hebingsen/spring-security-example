@@ -38,6 +38,10 @@ public class User implements Serializable{
 	
 	protected Date createTime;
 	
+	// 最近一次登录时间
+	protected Date lastLoginTime;
+	
+	// 用户权限
 	@Transient
 	protected List<Role> roles = new ArrayList<Role>();
 

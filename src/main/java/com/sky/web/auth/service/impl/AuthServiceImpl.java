@@ -1,21 +1,16 @@
 package com.sky.web.auth.service.impl;
-
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+import com.sky.exception.ServiceException;
 import com.sky.security.MyUserDetailsService;
 import com.sky.security.SecurityUser;
 import com.sky.utils.JwtTokenUtil;
-import com.sky.utils.U;
-import com.sky.web.auth.request.RegisterReq;
 import com.sky.web.auth.service.AuthService;
-import com.sky.web.user.mapper.UserMapper;
-import com.sky.web.user.pojo.User;
+import io.jsonwebtoken.Claims;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -35,53 +30,43 @@ public class AuthServiceImpl implements AuthService {
 	@Autowired
 	private AuthenticationManager authenticationManager;
 
-	/**
-	 * security用户详情
-	 */
 	@Autowired
 	private MyUserDetailsService userDetailsService;
 	
 	@Autowired
 	private JwtTokenUtil jwtTokenUtil;
 
-	/**
-	 * 用户
-	 */
-	@Autowired
-	private UserMapper userMapper;
-
-	@Override
-	public User register(RegisterReq registerUser) {
-		User user = new User();
-		BeanUtils.copyProperties(registerUser, user);
-		user.setCreateTime(U.now());
-		int result = userMapper.insertSelective(user);
-		log.info("用户注册结果:" + result);
-		return user;
-	}
-
 	@Override
 	public String login(String phone, String password) {
 		
-		//根据用户名与密码生成token认证
-		UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(phone,password);
-		
-		//将当前认证管理设置为token认证,返回获取到一个新的认证器
-		Authentication authentication = authenticationManager.authenticate(authenticationToken);
-		
-		//设置为当前认证
-		SecurityContextHolder.getContext().setAuthentication(authentication);
-		
-		//获取用户详情信息
-		SecurityUser userDetails = (SecurityUser) userDetailsService.loadUserByUsername(phone);
-		
-		return jwtTokenUtil.generateToken(userDetails);
+		try {
+			//根据用户名与密码生成token认证
+			UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(phone,password);
+			
+			//将当前认证管理设置为token认证,返回获取到一个新的认证器
+			Authentication authentication = authenticationManager.authenticate(authenticationToken);
+			
+			//设置为当前认证
+			SecurityContextHolder.getContext().setAuthentication(authentication);
+			
+			//获取用户详情信息
+			SecurityUser userDetails = (SecurityUser) userDetailsService.loadUserByUsername(phone);
+			
+			return jwtTokenUtil.generateToken(userDetails);
+		} catch (Exception e) {
+			log.error(e.getMessage());
+			throw new ServiceException("登录失败");
+		} 
 	}
 
 	@Override
 	public String refresh(String token) {
-		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public Claims parser(String token) {
+		return jwtTokenUtil.parser(token);
 	}
 
 }

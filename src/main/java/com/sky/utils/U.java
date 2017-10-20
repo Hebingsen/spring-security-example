@@ -24,7 +24,8 @@ public class U {
 	 * @param msg
 	 */
 	public static void assertException(boolean flag, String msg) {
-		throw new ServiceException(500, msg);
+		if(flag)
+			throw new ServiceException(500, msg);
 	}
 
 	/**
@@ -34,7 +35,8 @@ public class U {
 	 * @param msg
 	 */
 	public static void assertAuthException(boolean flag, String msg) {
-		throw new AuthException(500, msg);
+		if(flag)
+			throw new AuthException(500, msg);
 	}
 
 	/**
