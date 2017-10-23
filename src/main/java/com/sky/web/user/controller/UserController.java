@@ -1,22 +1,17 @@
 package com.sky.web.user.controller;
 
-import java.util.Collection;
 import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import com.sky.annotation.RestfulApi;
 import com.sky.base.ResponseEntity;
 import com.sky.security.SecurityUserUtil;
-import com.sky.web.user.pojo.User;
 import com.sky.web.user.response.UserResp;
-
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;

@@ -61,6 +61,16 @@ public class ResponseEntity {
 	}
 	
 	/**
+	 * 失败响应
+	 * @param code
+	 * @param msg
+	 * @return
+	 */
+	public static ResponseEntity fail(String msg) {
+		return new ResponseEntity(500, msg, null);
+	}
+	
+	/**
 	 * 转化为json字符串格式(自动忽略为null的字段)
 	 * @return
 	 */

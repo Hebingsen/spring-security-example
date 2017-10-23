@@ -8,6 +8,8 @@ import com.sky.utils.U;
 import com.sky.web.user.pojo.User;
 import com.xiaoleilu.hutool.util.StrUtil;
 
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * 
  * @作者 乐此不彼
@@ -15,6 +17,7 @@ import com.xiaoleilu.hutool.util.StrUtil;
  * @公司 sky工作室
  */
 @Component
+@Slf4j
 public class SecurityUserUtil {
 
 	@Value("${jwt.token-head}")
@@ -22,6 +25,46 @@ public class SecurityUserUtil {
 
 	@Autowired
 	private RedisUtil redis;
+	
+	/**
+	 * store token
+	 * @param token
+	 * @param obj
+	 * @param time
+	 * @return
+	 */
+	public boolean storeToken(String token,Object obj,Long time) {
+		try {
+			redis.set(token, obj, 3600L);
+			return true;
+		} catch (Exception e) {
+			log.error("store token fail,token={}",token);
+			return false;
+		}
+	}
+
+	/**
+	 * clear token
+	 */
+	public boolean clearToken(String token) {
+
+		try {
+			log.info(" clear token ", token);
+
+			token = dealToken(token);
+			
+			if (redis.exists(token))
+				redis.remove(token);
+			else
+				log.info("token is not exists");
+
+			return true;
+		} catch (Exception e) {
+
+			return false;
+		}
+
+	}
 
 	/**
 	 * 处理token
@@ -41,14 +84,14 @@ public class SecurityUserUtil {
 	 * @return
 	 */
 	public User getUser(String token) {
-		
+
 		token = dealToken(token);
 		U.assertException(StrUtil.isBlank(token), "需要解析的令牌为空");
 
 		U.assertException(!redis.exists(token), "用户登录信息不存在");
 
-		//User user = redis.getByClass(token, User.class);
-		User user = (User)redis.get(token);
+		// User user = redis.getByClass(token, User.class);
+		User user = (User) redis.get(token);
 		U.assertException(user == null, "用户登录信息为空");
 
 		return user;
