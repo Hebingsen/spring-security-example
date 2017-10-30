@@ -1,21 +1,16 @@
 package com.sky.web.auth.controller;
 
 import javax.servlet.http.HttpServletRequest;
-
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 import com.sky.annotation.RestfulApi;
 import com.sky.base.ResponseEntity;
-import com.sky.redis.RedisUtil;
 import com.sky.security.SecurityUserUtil;
 import com.sky.utils.MD5;
 import com.sky.utils.U;
-import com.sky.web.auth.request.RegisterReq;
 import com.sky.web.auth.service.AuthService;
 import com.sky.web.user.pojo.User;
 import com.sky.web.user.service.UserService;
@@ -64,7 +59,7 @@ public class AuthController {
 
 		// 3.将成功生成后的token存储进去redis中进行管理
 		securityUserUtil.storeToken(token, user, 3600L);
-
+		
 		return ResponseEntity.success("登录成功", token);
 	}
 
@@ -77,7 +72,15 @@ public class AuthController {
 		else
 			return ResponseEntity.fail(500, "退出失败");
 	}
+	
+	@ApiOperation("刷新令牌")
+	@PostMapping("/refresh")
+	public ResponseEntity refresh(@RequestHeader(name = "refreshToken") String refreshToken) {
+		String newToken = authService.refresh(refreshToken);
+		return ResponseEntity.success("令牌刷新成功",newToken);
+	}
 
+	
 	@ApiOperation("解析token")
 	@PostMapping("/parse")
 	public ResponseEntity parseToken(@RequestParam String token) {

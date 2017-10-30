@@ -6,10 +6,15 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import com.sky.exception.ServiceException;
+import com.sky.redis.RedisUtil;
 import com.sky.security.MyUserDetailsService;
 import com.sky.security.SecurityUser;
+import com.sky.security.SecurityUserUtil;
 import com.sky.utils.JwtTokenUtil;
+import com.sky.utils.U;
 import com.sky.web.auth.service.AuthService;
+import com.sky.web.user.pojo.User;
+
 import io.jsonwebtoken.Claims;
 import lombok.extern.slf4j.Slf4j;
 
@@ -35,6 +40,12 @@ public class AuthServiceImpl implements AuthService {
 	
 	@Autowired
 	private JwtTokenUtil jwtTokenUtil;
+	
+	@Autowired
+	private RedisUtil redis;
+	
+	@Autowired
+	private SecurityUserUtil securityUserUtil;
 
 	@Override
 	public String login(String phone, String password) {
@@ -60,8 +71,26 @@ public class AuthServiceImpl implements AuthService {
 	}
 
 	@Override
-	public String refresh(String token) {
-		return null;
+	public String refresh(String refreshToken) {
+		
+		//1.判断refreshToken是否有效
+		log.info("refreshToken={}",refreshToken);
+		
+		//2.无效->返回错误响应结果
+		U.assertException(!redis.exists(refreshToken), "无效刷新令牌");
+		
+		//3.有效->解析refreshToken
+		Claims claims = jwtTokenUtil.parser(refreshToken);
+		String password = claims.get("password", String.class);
+		String phone = claims.get("phone", String.class);
+		
+		//4.生成新的token
+		String newToken = login(phone, password);
+		User user = jwtTokenUtil.parser2User(newToken);
+		securityUserUtil.storeToken(newToken, user, 3600L);
+		
+		
+		return newToken;
 	}
 
 	@Override

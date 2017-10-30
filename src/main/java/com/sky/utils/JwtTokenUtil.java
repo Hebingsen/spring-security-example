@@ -1,6 +1,7 @@
 package com.sky.utils;
 
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import javax.crypto.SecretKey;
@@ -9,6 +10,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 import com.sky.exception.AuthException;
 import com.sky.security.SecurityUser;
+import com.sky.web.user.pojo.User;
 import com.xiaoleilu.hutool.lang.Base64;
 import com.xiaoleilu.hutool.util.StrUtil;
 import io.jsonwebtoken.Claims;
@@ -50,6 +52,21 @@ public class JwtTokenUtil {
 			throw new AuthException(500, "token解析异常");
 		return claims;
 	}
+	
+	/**
+	 * 解析token返回用户信息 
+	 * @param token
+	 * @return
+	 */
+	public User parser2User(String token) {
+		Claims claims = parser(token);
+		User user = new User()
+		.setId(claims.get("id", Long.class))
+		.setRoles(claims.get("authorities", ArrayList.class))
+		.setUserName(claims.get("username", String.class))
+		.setPhone(claims.get("phone", String.class));
+		return user;
+	}
 
 	/**
 	 * 根据用户详情生成token
@@ -62,6 +79,25 @@ public class JwtTokenUtil {
 		claims.put("authorities", userDetails.getAuthorities());//角色权限信息
 		claims.put("phone", userDetails.getPhone());
 		claims.put("id", userDetails.getId());
+		claims.put("type", "access_token");
+		String compact = Jwts.builder().signWith(SignatureAlgorithm.HS512, env.getProperty("jwt.secret"))
+				.setClaims(claims)
+				.compact();
+		return compact;
+	}
+	
+	/**
+	 * 根据用户详情生成refreshToken
+	 * @param userDetails
+	 * @return
+	 */
+	public String generateRefreshToken(SecurityUser userDetails) {
+		Map<String,Object> claims = new HashMap<String,Object>();
+		claims.put("username", userDetails.getUsername());//用户名
+		claims.put("phone", userDetails.getPhone());
+		claims.put("password", userDetails.getPassword());
+		claims.put("id", userDetails.getId());
+		claims.put("type", "refresh_token");
 		String compact = Jwts.builder().signWith(SignatureAlgorithm.HS512, env.getProperty("jwt.secret"))
 				.setClaims(claims)
 				.compact();

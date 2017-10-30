@@ -18,7 +18,7 @@ public interface AuthService {
 	/**
 	 * 刷新token
 	 */
-	String refresh(String token);
+	String refresh(String refreshToken);
 
 	/**
 	 * 解析token
@@ -26,5 +26,6 @@ public interface AuthService {
 	 * @return
 	 */
 	Claims parser(String token);
+	
 	
 }

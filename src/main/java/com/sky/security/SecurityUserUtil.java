@@ -1,9 +1,11 @@
 package com.sky.security;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import com.sky.redis.RedisUtil;
+import com.sky.utils.JwtTokenUtil;
 import com.sky.utils.U;
 import com.sky.web.user.pojo.User;
 import com.xiaoleilu.hutool.util.StrUtil;
@@ -26,6 +28,20 @@ public class SecurityUserUtil {
 	@Autowired
 	private RedisUtil redis;
 	
+	@Autowired
+	private JwtTokenUtil jwtTokenUtil;
+	
+	/**
+	 * store refresh token
+	 * @param user
+	 */
+	public void storeRefreshToken(User user) {
+		SecurityUser userDetails = new SecurityUser();
+		BeanUtils.copyProperties(userDetails, user);
+		String refreshToken = jwtTokenUtil.generateToken(userDetails);
+		redis.set("", refreshToken);
+	}
+	
 	/**
 	 * store token
 	 * @param token
@@ -33,9 +49,10 @@ public class SecurityUserUtil {
 	 * @param time
 	 * @return
 	 */
-	public boolean storeToken(String token,Object obj,Long time) {
+	public boolean storeToken(String token,User user,Long time) {
 		try {
-			redis.set(token, obj, 3600L);
+			redis.set(token, user, 3600L);
+			storeRefreshToken(user);
 			return true;
 		} catch (Exception e) {
 			log.error("store token fail,token={}",token);
