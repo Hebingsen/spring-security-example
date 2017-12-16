@@ -1,8 +1,5 @@
 #应用信息
 spring:
-  application:
-    name: api-gateway
-    desc: 网关中心
   cloud:
     config:
       #配置中心地址
@@ -11,30 +8,4 @@ spring:
       profile: default
       #分支
       label: master
-    
-#服务端口号
-server:
-  port: 8899
 
-#日志配置
-logging:
-  level:
-    org.springframework:
-      security: DEBUG
-      
-#eureka服务与发现注册中心地址   
-eureka:
-  client:
-    serviceUrl:
-      defaultZone: http://localhost:8888/eureka/
-
-#配置网关路由规则
-zuul:
-  routes:
-    user:
-      path: /api/user/**
-      serviceId: user-consumer
-      stripPrefix : false
-  host:
-    max-total-connections: 500 # 每个服务的http客户端连接池最大连接，默认值是200
-    max-per-route-connections: 50 # 每个route可用的最大连接数，默认值是20  
