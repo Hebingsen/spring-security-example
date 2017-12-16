@@ -1,9 +1,8 @@
 #应用信息
 spring:
-  spring:
-    application:
-      name: api-gateway
-      desc: 网关中心
+  application:
+    name: api-gateway
+    desc: 网关中心
   cloud:
     config:
       #配置中心地址(目前分布式配置中心服务部署在腾讯云服务器111.230.253.48)
