@@ -13,11 +13,12 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import com.sky.filter.JwtAuthenticationFilter;
-import com.sky.handler.Handler401Exception;
-import com.sky.handler.Handler403Exception;
-import com.sky.security.Md5PasswordEncoder;
-import com.sky.security.MyUserDetailsService;
+
+import com.sky.auth.filter.JwtAuthenticationFilter;
+import com.sky.auth.handler.Handler401Exception;
+import com.sky.auth.handler.Handler403Exception;
+import com.sky.auth.security.Md5PasswordEncoder;
+import com.sky.auth.security.MyUserDetailsService;
 
 /**
  * 
@@ -93,8 +94,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	public void configure(WebSecurity web) throws Exception {
 		// swagger 在线api文档路径规则
-		web.ignoring().antMatchers("/configuration/**", "/images/**", "/v2/api-docs", "/swagger-ui.html",
-				"/swagger-resources/**", "/webjars/springfox-swagger-ui/**");
+		web.ignoring().antMatchers("/v2/api-docs"
+				,"/swagger-resources/configuration"
+				,"/swagger-resources"
+				,"/swagger-resources/configuration/security"
+				,"/swagger-ui.html"
+				,"/webjars/**"
+				,"/images/**");
+		//web.ignoring().antMatchers("/configuration/**", "/images/**", "/v2/api-docs", "/swagger-ui.html",
+				//"/swagger-resources/**", "/webjars/**");
 
 		// 静态资源
 		web.ignoring().antMatchers("/resource/**", "/favicon.ico", "/**/*.html", "/**/*.js", "/**/*.css");
@@ -103,7 +111,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	/**
 	 * json web token 鉴权过滤器
-	 * 
 	 * @return
 	 */
 	@Bean

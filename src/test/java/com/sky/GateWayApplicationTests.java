@@ -14,7 +14,7 @@ import io.jsonwebtoken.impl.crypto.MacProvider;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class SecurityApplicationTests {
+public class GateWayApplicationTests {
 
 	@Test
 	public void contextLoads() {

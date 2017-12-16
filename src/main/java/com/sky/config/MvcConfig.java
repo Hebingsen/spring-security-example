@@ -1,11 +1,15 @@
 package com.sky.config;
 
+import com.sky.base.Constant;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
+
 @Configuration
+//@EnableWebMvc
 public class MvcConfig extends WebMvcConfigurerAdapter {
 
 	/**
@@ -13,18 +17,17 @@ public class MvcConfig extends WebMvcConfigurerAdapter {
 	 */
 	@Override
 	public void addViewControllers(ViewControllerRegistry registry) {
-		registry.addViewController("/home").setViewName("home");
 		registry.addRedirectViewController("/", "/swagger-ui.html");
-		registry.addViewController("/auth/hello").setViewName("hello");
-		registry.addViewController("/login").setViewName("login");
+
 	}
-	
+
 	/**
 	 * 跨域配置
 	 */
 	@Override
 	public void addCorsMappings(CorsRegistry registry) {
-		registry.addMapping("/**").allowedOrigins("*").allowedMethods("GET", "HEAD", "POST", "PUT", "DELETE", "OPTIONS")
+		registry.addMapping("/**").allowedOrigins("*")
+				.allowedMethods(Constant.SUPPORT_METHODS)
 				.allowCredentials(false).maxAge(3600);
 	}
 
