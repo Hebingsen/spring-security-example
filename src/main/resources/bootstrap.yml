@@ -28,10 +28,6 @@ eureka:
     serviceUrl:
       defaultZone: http://localhost:8888/eureka/
 
-
-
-
-
 #配置网关路由规则
 zuul:
   routes:
